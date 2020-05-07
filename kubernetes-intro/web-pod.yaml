@@ -3,11 +3,14 @@ kind: Pod
 metadata:
   name: web
   labels:
-    key: app
+    run: app
 spec:
   containers:
   - name: web
     image: fuckir89/otus-web:1.0
+    volumeMounts:
+    - name: app
+      mountPath: /app
   initContainers:
   - name: web-init
     image: busybox:latest
@@ -18,3 +21,6 @@ spec:
   volumes:
   - name: app
     emptyDir: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+  
