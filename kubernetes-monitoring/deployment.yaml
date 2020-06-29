@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: fuckir89/nginx:1.0.0
+        ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+      - name: exporter
+        image: nginx/nginx-prometheus-exporter:0.7.0
+        ports:
+        - name: metrics
+          containerPort: 9113
+          protocol: TCP
+        args: ['-nginx.scrape-uri', 'http://127.0.0.1:80/basic_status']
