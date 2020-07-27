@@ -1,0 +1,4 @@
+[0mPath           Type          Accessor                    Description
+----           ----          --------                    -----------
+kubernetes/    kubernetes    auth_kubernetes_5f6aeee1    n/a
+token/         token         auth_token_b27de060         token based credentials[0m

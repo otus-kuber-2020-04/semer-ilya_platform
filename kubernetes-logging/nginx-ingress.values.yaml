@@ -41,3 +41,10 @@ controller:
 
   nodeSelector: 
     cloud.google.com/gke-nodepool: infra-pool
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      namespaceSelector:
+        any: true
