@@ -4,8 +4,8 @@ again. Future Vault requests will automatically use this token.
 
 Key                  Value
 ---                  -----
-token                s.cBGqEcyejH4N6OstBfNyW97A
-token_accessor       c9eO8JPZpSyrbjVhy9kzbR6p
+token                s.Pqobowqr573j334EZRCakBCn
+token_accessor       gLKkCySuGwscI4e2bOhPZUKC
 token_duration       ∞
 token_renewable      false
 token_policies       ["root"]

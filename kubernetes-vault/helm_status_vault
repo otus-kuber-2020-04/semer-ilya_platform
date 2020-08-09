@@ -1,0 +1,17 @@
+NAME: vault
+LAST DEPLOYED: 2020-08-09 18:52:09.06627 +0300 MSK
+NAMESPACE: default
+STATUS: deployed
+NOTES:
+Thank you for installing HashiCorp Vault!
+
+Now that you have deployed Vault, you should look over the docs on using
+Vault with Kubernetes available here:
+
+https://www.vaultproject.io/docs/
+
+
+Your release is named vault. To learn more about the release, try:
+
+  $ helm status vault
+  $ helm get vault
