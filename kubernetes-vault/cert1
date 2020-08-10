@@ -1,0 +1,6 @@
+[91mError writing data to pki_int/issue/devlab-dot-ru: Error making API request.
+
+URL: PUT http://127.0.0.1:8200/v1/pki_int/issue/devlab-dot-ru
+Code: 400. Errors:
+
+* unknown role: devlab-dot-ru[0m

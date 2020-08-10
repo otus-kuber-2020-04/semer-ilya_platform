@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-inject-example
+  namespace: default
+data:
+  ssl.conf: |
+    server {
+        listen       443 ssl;
+        server_name  nginx.example.ru;
+        ssl_certificate     /vault/secrets/tls.pem;
+        ssl_certificate_key /vault/secrets/tls.pem;
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/role: "pki"
+    vault.hashicorp.com/service: "https://vault:8200"
+    vault.hashicorp.com/ca-cert: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+    vault.hashicorp.com/agent-inject-secret-tls.pem: "pki_int/issue/example-dot-ru"
+    vault.hashicorp.com/agent-inject-template-tls.pem: |
+      {{- with secret "pki_int/issue/example-dot-ru" "common_name=nginx.example.ru" "ttl=60s" -}}
+      {{ .Data.private_key }}
+      {{ .Data.certificate }}
+      {{ .Data.issuing_ca }}
+      {{- end }}
+    vault.hashicorp.com/agent-inject-command-tls.pem: "/bin/sh -c 'pkill -HUP nginx || true'"
+    vault.hashicorp.com/agent-run-as-user: "0"
+  name: vault-inject-example
+  namespace: default
+spec:
+  serviceAccountName: vault-auth
+  # shared PID namespace so the vault-agent sidecar can send signals to nginx in the app container
+  shareProcessNamespace: true
+
+  volumes:
+  - configMap:
+      name: vault-inject-example
+    name: config
+
+  containers:
+  - image: nginx
+    name: nginx-container
+    ports:
+    - containerPort: 80
+    - containerPort: 443
+    volumeMounts:
+    - name: config
+      mountPath: /etc/nginx/conf.d/ssl.conf
+      subPath: ssl.conf
